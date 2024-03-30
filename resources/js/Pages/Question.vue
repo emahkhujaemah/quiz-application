@@ -9,17 +9,20 @@
     const page=usePage()
     const success=computed(()=>page.props.flash.success)
     const showNewQuestionModal=ref(false)
+    const showViewQuestionModal=ref(false)
     const createdQuestion=ref(null)
     const newAnswers=ref([])
+    const answers=ref([])
     const selectedAnswer=ref(null)
     let answerId=1
-
+    const selectedQuestion=ref(null)
     function createQuestion(){
         showNewQuestionModal.value=true
     }
 
     function destroyModal(){
         showNewQuestionModal.value=false
+        showViewQuestionModal.value=false
     }
 
     function addNewAnswer() {
@@ -39,7 +42,7 @@
                 answer.correct_answer=1
             }else{
                 answer.correct_answer=0
-            }
+            } 
         })
     }
 
@@ -87,6 +90,35 @@
         questions: Object,
         errors: Object,
     })
+
+    function viewQuestion(index){
+        showViewQuestionModal.value = true
+        selectedQuestion.value = props.questions[index]
+        answers.value = props.questions[index].answers
+        // alert(index);
+    }
+
+    // Handle radio change and submit edited amswers
+    const selectedEditAnswer=ref(null)
+    function handleRadioChange(Id) {
+        selectedEditAnswer.value = Id
+
+        answers.value.forEach(answer=> {
+            if(answer.id === Id){
+                answer.correct_answer = 1
+            }else{
+                answer.correct_answer = 0
+            }
+        })
+    }
+
+    // Save updated answers to database
+    function updateAnswers() {
+        router.put('/answers' , answers.value)
+        // onSuccess=>{
+        //     showViewQuestionModal.value=false
+        // }
+    }
 
 </script>
 
@@ -155,6 +187,42 @@
                     <button @click="destroyModal" class="btn btn-danger">Close</button>
                     <button v-if="newAnswers.length>3" @click="submitQuestion" class="btn btn-success">Submit</button>
                 </template>
+            </NewQuestionModal>
+
+            <NewQuestionModal :show="showViewQuestionModal" @close="destroyModal">
+            <template #header>
+                <h5>View Question/Answer</h5>
+            </template>
+            <template #success>
+                    <div  v-if="success" class="alert alert-success">{{ success }}</div>
+                </template>
+            <template #body>
+                <p><strong>Q.{{ selectedQuestion.question }}</strong></p>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Answers</th>
+                        <th scope="col">Correct ?</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(answer, index) in answers">
+                        <th scope="row">{{ index+1 }}</th>
+                        <td>
+                            <input type="text" v-model="answer.answer" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                        </td>
+                        <td>
+                            <input :checked="answer.correct_answer === 1" class="form-check-input" :value="answer.id" @change="handleRadioChange(answer.id)" type="radio">
+                        </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </template>
+            <template #footer>
+                <button @click="destroyModal" class="btn btn-danger">Close</button>
+                <button @click="updateAnswers" class="btn btn-success">Update</button>
+            </template>
             </NewQuestionModal>
         </Teleport>
     </Layout>
