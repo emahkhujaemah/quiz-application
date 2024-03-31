@@ -120,6 +120,29 @@
         // }
     }
 
+    // edit question
+    const editquestionModal=ref(false)
+    const questionForEdit=ref(null)
+
+    function editQuestion(index) {
+        questionForEdit.value=props.questions[index]
+        // alert(index)
+    }
+
+    function updateQuestion() {
+        router.put('/questions', 
+        questionForEdit.value
+        )
+    }
+
+    // delete question
+    function deleteQuestion(id) {
+        router.on('before', (s) => {
+            return confirm('You are about to delete a record, are you sure?')
+        })
+        router.delete('/questions'+id)
+    }
+
 </script>
 
 <template>
@@ -139,8 +162,8 @@
                     <td>{{ question.question }}</td>
                     <td>
                         <button @click="viewQuestion(index)" class="btn btn-primary">View</button>
-                        <button class="btn btn-success">Edit</button>
-                        <button class="btn btn-danger">Delete</button>
+                        <button @click="editquestionModal=true, editQuestion(index)" class="btn btn-success">Edit</button>
+                        <button @click="deleteQuestion(question.id)" class="btn btn-danger">Delete</button>
                     </td>
                 </tr>
             </tbody>
@@ -195,7 +218,7 @@
             </template>
             <template #success>
                     <div  v-if="success" class="alert alert-success">{{ success }}</div>
-                </template>
+            </template>
             <template #body>
                 <p><strong>Q.{{ selectedQuestion.question }}</strong></p>
                 <table class="table table-striped">
@@ -223,6 +246,24 @@
                 <button @click="destroyModal" class="btn btn-danger">Close</button>
                 <button @click="updateAnswers" class="btn btn-success">Update</button>
             </template>
+            </NewQuestionModal>
+            <NewQuestionModal :show="editquestionModal" @click="editQuestionModal=false"> 
+                <template #header>
+                    <h5>Edit Question</h5>
+                </template>
+                <template #success>
+                    <div  v-if="success" class="alert alert-success">{{ success }}</div>
+                </template>
+                <template #body>
+                    <div class="mb-3">
+                        <label for="exampleFormControlInput1" class="form-label" >Question</label>
+                        <input v-model="questionForEdit.question" type="text" class="form-control"id="exampleFormControlInput1" placeholder="Question">
+                    </div>
+                </template>
+                <template #footer>
+                    <button @click="editquestionModal=false" class="btn btn-danger">Close</button>
+                    <button @click="updateQuestion" class="btn btn-success">Update</button>
+                </template>
             </NewQuestionModal>
         </Teleport>
     </Layout>

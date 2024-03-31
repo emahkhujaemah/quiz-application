@@ -76,7 +76,12 @@ class QuestionController extends Controller
      */
     public function update(Request $request, Question $question)
     {
-        //
+        $id = $request['id'];
+        $editQuestion = Question::findorFail($id);
+        $editQuestion->question = $request['question'];
+        $editQuestion->save();
+
+        return redirect('/questions')->with('success', 'Question edited successfully');
     }
 
     /**
