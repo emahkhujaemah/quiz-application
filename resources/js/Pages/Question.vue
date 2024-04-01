@@ -140,7 +140,7 @@
         router.on('before', (s) => {
             return confirm('You are about to delete a record, are you sure?')
         })
-        router.delete('/questions'+id)
+        router.delete('/questions/'+id)
     }
 
 </script>
