@@ -18,16 +18,16 @@ class QuizController extends Controller
         }])->inRandomOrder()->get();
 
         return Inertia::render('Quiz',[
-            'question' => $questions,
+            'questions' => $questions,
         ]);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function results(Request $request)
     {
-        //
+        return $request->all();
     }
 
     /**

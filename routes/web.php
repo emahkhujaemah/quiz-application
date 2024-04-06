@@ -27,3 +27,4 @@ Route::delete('/questions/{question}', [QuestionController::class, 'destroy']);
 Route::put('/answers', [AnswerController::class, 'update']);
 
 Route::get('/quiz', [QuizController::class, 'index']);
+Route::post('/results', [QuizController::class, 'results']);
