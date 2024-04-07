@@ -1,5 +1,5 @@
 <script setup>
-import Layout from '@/Shared/Layout.vue';
+import Layout from '@/Shared/Layout.vue'
 defineProps({
     percentage: Number,
     comment: String

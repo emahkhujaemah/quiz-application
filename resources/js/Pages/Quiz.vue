@@ -58,7 +58,7 @@ function calculateResult(){
                     <h6 class="mb-0">{{ currentQuestion ? currentQuestion.question : 'Loading...' }}??</h6>
                 </div>
             </a>
-            <a @click="selectedOption(index)" v-for="(answer, index) in answers" class="list-group-item list-group-item-action d-flex gap-3 py-3" aria-current="true">
+            <a @click="selectedOption(index)" v-for="(answer, index) in answers" :class="{selected: index===selectedAnswer}" class="list-group-item list-group-item-action d-flex gap-3 py-3" aria-current="true">
                 <div class="d-flex gap-2 w-100 justify-content-between">
                     <div>
                         <p class="mb-0 opacity-75">{{answer.answer}}</p>
@@ -73,3 +73,10 @@ function calculateResult(){
         </div>
     </Layout>
 </template>
+
+<style scoped>
+.selected{
+    background-color: green;
+    color: white;
+}
+</style>
