@@ -17,7 +17,7 @@ class QuizController extends Controller
             $query->inRandomOrder();
         }])->inRandomOrder()->get();
 
-        return Inertia::render('Quiz',[
+        return Inertia::render('Quiz',[ 
             'questions' => $questions,
         ]);
     }
@@ -27,7 +27,23 @@ class QuizController extends Controller
      */
     public function results(Request $request)
     {
-        return $request->all();
+        $score = $request[0]['results']['score'];
+        $totalQuestions = $request[0]['results']['totalQuestions'];
+
+        $percentage = ceil(($score/$totalQuestions)*100);
+
+        $comment = match(true){
+            $percentage>=80 && $percentage<=100 => 'Congratulations',
+            $percentage>=60 && $percentage<=79 => 'Impressive',
+            $percentage>=60 && $percentage<=59 => 'Almost there!',
+            $percentage<39 => 'Uh-Oh',
+            default => 'Well how did you reach here? '
+        };
+
+        return Inertia::render('Result', [
+            'percentage' => $percentage,
+            'comment' => $comment,
+        ]);
     }
 
     /**

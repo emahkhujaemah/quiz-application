@@ -17,7 +17,7 @@ const answers=computed(()=>{
 })
 
 const selectedAnswer=ref(null)
-const result = ref(null)
+const result = ref(0)
 function selectedOption(index){
     selectedAnswer.value=index
 }
